@@ -1,12 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.example.imdbapp"
     compileSdk {
-        version = release(36) {
+        version = release(35) {
             minorApiLevel = 1
         }
     }
@@ -14,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "com.example.imdbapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -45,6 +49,19 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
+
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
+    implementation (libs.retrofit.kotlinx.serialization)
+
+    implementation (libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

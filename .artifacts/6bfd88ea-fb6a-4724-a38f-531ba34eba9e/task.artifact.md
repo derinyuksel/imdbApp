@@ -1,0 +1,6 @@
+- [ ] Restore Kotlin Android plugin in root `build.gradle.kts`
+- [ ] Restore and reorder plugins in `app/build.gradle.kts`
+- [ ] Correct `compileSdk` and `targetSdk` DSL in `app/build.gradle.kts`
+- [ ] Correct `buildTypes` DSL in `app/build.gradle.kts`
+- [ ] Verify configuration with `./gradlew help`
+- [ ] Build project with `./gradlew :app:assembleDebug`
