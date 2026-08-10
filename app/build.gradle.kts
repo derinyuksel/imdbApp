@@ -10,7 +10,7 @@ plugins {
 android {
     namespace = "com.example.imdbapp"
     compileSdk {
-        version = release(35) {
+        version = release(36) {
             minorApiLevel = 1
         }
     }
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "com.example.imdbapp"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
