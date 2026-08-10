@@ -8,10 +8,10 @@ class AuthInterceptor @Inject constructor(): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val request = chain.request().newBuilder
+        val request = chain.request().newBuilder()
             .addHeader(
                 name = "Authorization",
-                value = "Bearer ${BuildConfig.API_KEY}"
+                value = "Bearer ${"API_KEY"}"
             )
             .addHeader(
                 name = "Accept",
