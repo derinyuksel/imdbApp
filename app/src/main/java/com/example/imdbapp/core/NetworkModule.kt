@@ -29,7 +29,7 @@ object NetworkModule{
             .baseUrl("https://api.themoviedb.org/3/")
             .client(okHttpClient)
             .addConverterFactory(
-                Json.asConverterFactory("application/json".toMediaType())
+                json.asConverterFactory("application/json".toMediaType())
             )
             .build()
     }
@@ -40,6 +40,8 @@ object NetworkModule{
         isLenient = true
     }
 
+    @Provides
+    @Singleton
     fun provideHttpClient(authInterceptor: AuthInterceptor) : OkHttpClient {
         return  OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT , TimeUnit.SECONDS)

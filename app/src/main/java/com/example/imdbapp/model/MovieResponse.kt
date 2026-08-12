@@ -1,5 +1,8 @@
 package com.example.imdbapp.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class MovieResponse(
     val page: Int,
     val results: List<Result>,
