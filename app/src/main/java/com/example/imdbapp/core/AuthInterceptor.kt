@@ -11,7 +11,7 @@ class AuthInterceptor @Inject constructor(): Interceptor {
         val request = chain.request().newBuilder()
             .addHeader(
                 name = "Authorization",
-                value = "Bearer ${"API_KEY"}"
+                value = "Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZTY1YWJhY2FjYjg5ZjZlZmQ3OGJiMDQxMzFlNGIzMyIsIm5iZiI6MTc4NTkyNjI1MS43NDMsInN1YiI6IjZhNzMxMjZiYjRlNjMwYmEzN2MyN2NjNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.PKY4GO8Wit6Oe-7hC9AxYETU5bvmTkvpBdPneqnU95s"}"
             )
             .addHeader(
                 name = "Accept",
