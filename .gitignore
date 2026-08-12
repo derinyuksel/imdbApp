@@ -31,3 +31,5 @@ google-services.json
 
 # Android Profiling
 *.hprof
+.artifacts/f657c800-ffa6-4f82-9aff-77de3b916e27/implementation_plan.artifact.md
+.kotlin/sessions/kotlin-compiler-787392057373088943.salive
