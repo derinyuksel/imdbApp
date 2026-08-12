@@ -6,6 +6,7 @@ import com.example.imdbapp.home.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +28,14 @@ class HomeViewModel @Inject constructor(
     fun loadTrendingMovies(){
         viewModelScope.launch{
             _uiState.value = _uiState.value.copy(isLoading = true)
+            val result = repo.getTrendingMovies()
+
+            _uiState.update {state ->
+                when (result){
+                    is NetworkResult.Success -> state.copy(trendingMovies = result.data, isLoading = false)
+                    is NetworkResult.Error -> state.copy(error = result.message, isLoading = false)
+                }
+            }
 
         }
     }
