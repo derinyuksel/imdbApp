@@ -7,6 +7,4 @@ import retrofit2.http.GET
 interface TmdbApi {
     @GET("trending/movie/week")
     suspend fun getTrendingMovies() : MovieResponse
-
     }
-}
