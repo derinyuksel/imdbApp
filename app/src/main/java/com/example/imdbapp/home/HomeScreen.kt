@@ -23,8 +23,8 @@ fun HomeScreen(
             Text (text = state.error!!)
         }
         else -> {
-            Text (text = state.trendingMovies[1].title)
-            Text (text = state.trendingMovies[1].overview)
+            Text (text = state.trendingMovies[2].title)
+            Text (text = state.trendingMovies[2].overview)
         }
     }
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.imdbapp.home.HomeScreen
 import com.example.imdbapp.ui.theme.ImdbAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import com.example.imdbapp.home.HomeUiState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImdbAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   HomeScreen()
+                    HomeScreen()
 
                     /* Greeting(
                         name = "Android",
@@ -36,18 +36,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    ImdbAppTheme {
-        Greeting("Android")
-    }
+fun HomeScreenContent(state: HomeUiState = HomeUiState() ){
+
 }
