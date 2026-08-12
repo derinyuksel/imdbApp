@@ -9,16 +9,12 @@ plugins {
 
 android {
     namespace = "com.example.imdbapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.imdbapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -27,14 +23,20 @@ android {
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+            )
+
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -52,11 +54,11 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)
-    implementation (libs.okhttp)
-    implementation (libs.logging.interceptor)
-    implementation (libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.retrofit.kotlinx.serialization)
 
-    implementation (libs.hilt.android)
+    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
     implementation(libs.coil.compose)
