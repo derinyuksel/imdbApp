@@ -1,11 +1,11 @@
 package com.example.imdbapp.core
 
-import com.example.imdbapp.model.MovieResponse
+import com.example.imdbapp.model.Result
 import javax.inject.Inject
 
 class Repository @Inject constructor(val apiService: TmdbApi) {
 
-    suspend fun getTrendingMovies(): NetworkResult<List<MovieResponse.Result>> {
+    suspend fun getTrendingMovies(): NetworkResult<List<Result>> {
         return try {
             val response = apiService.getTrendingMovies()
             NetworkResult.Success(response.results)
