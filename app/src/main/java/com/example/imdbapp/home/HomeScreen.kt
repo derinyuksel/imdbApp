@@ -23,8 +23,14 @@ fun HomeScreen(
             Text (text = state.error!!)
         }
         else -> {
-            Text (text = state.trendingMovies[2].title)
-            Text (text = state.trendingMovies[2].overview)
+            Text (text = state.trendingMovies[0].title)
+            Text (text = state.trendingMovies[0].overview)
         }
     }
 }
+
+@Composable
+fun HomeScreenContent(){
+
+}
+

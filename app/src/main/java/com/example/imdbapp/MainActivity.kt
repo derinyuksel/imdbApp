@@ -39,6 +39,14 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenContent(state: HomeUiState = HomeUiState() ){
+fun HomeScreenPreview() {
+    ImdbAppTheme {
+        HomeScreenContent(state = HomeUiState(isLoading = true))
+    }
+}
+
+
+@Composable
+fun HomeScreenContent(){
 
 }
