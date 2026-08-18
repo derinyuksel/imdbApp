@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.imdbapp.model.MovieResponse
+import com.example.imdbapp.model.Result
 
 @Composable
 fun MovieCard(
-    movie: MovieResponse.Result,
+    movie: Result,
     onMovieClick: (Int) -> Unit
 ) {
 
