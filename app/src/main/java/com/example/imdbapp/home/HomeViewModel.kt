@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.imdbapp.core.NetworkResult
 import com.example.imdbapp.core.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
+import kotlin.collections.orEmpty
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -25,16 +28,39 @@ class HomeViewModel @Inject constructor(
         loadTrendingMovies()
     }
 
-    fun loadTrendingMovies(){
+    fun loadTrendingMovies() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            val result = repo.getTrendingMovies()
 
-            _uiState.update { state ->
-                when (result){
-                    is NetworkResult.Success -> state.copy(trendingMovies = result.data, isLoading = false)
-                    is NetworkResult.Error -> state.copy(error = result.message, isLoading = false)
+            supervisorScope {
+                _uiState.update {
+                    it.copy(isLoading = true)
                 }
+                val trendingMovies = async { repo.getTrendingMovies() }
+                val popularMovies = async { repo.getPopularMovies() }
+                val topRatedMovies = async { repo.getTopRatedMovies() }
+                val upcomingMovies = async { repo.getUpcomingMovies() }
+                val trendingPeople = async { repo.getTrendingPeople() }
+
+
+                val trending = trendingMovies.await()
+                val popular = popularMovies.await()
+                val topRated = topRatedMovies.await()
+                val upcoming = upcomingMovies.await()
+                val people = trendingPeople.await()
+
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        trendingMovies = (trending as? NetworkResult.Success)?.data.orEmpty(),
+                        popularMovies = (popular as? NetworkResult.Success)?.data.orEmpty(),
+                        topRatedMovies = (topRated as? NetworkResult.Success)?.data.orEmpty(),
+                        upcomingMovies = (upcoming as? NetworkResult.Success)?.data.orEmpty(),
+                        trendingPeople = (people as? NetworkResult.Success)?.data.orEmpty(),
+                    )
+                }
+
+
             }
 
         }
