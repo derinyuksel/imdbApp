@@ -40,7 +40,11 @@ fun HomeScreenContent(state: HomeUiState, modifier: Modifier) {
                 LazyColumn {
 
                     val sections = listOf(
-                        "Trending" to state.trendingMovies
+                        "Trending" to state.trendingMovies,
+                        "Popular" to state.popularMovies,
+                        "Top Rated" to state.topRatedMovies,
+                        "Upcoming" to state.upcomingMovies,
+                        "Trending People" to state.trendingPeople
                     )
 
                     items(sections) { (title, movies) ->
