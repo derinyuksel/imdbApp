@@ -22,41 +22,40 @@ fun MoviesSection(
     title: String,
     movies: List<Result>,
     onMovieClick: (Int) -> Unit
-){
+) {
 
-    Column(modifier = Modifier.padding(bottom=8.dp)){
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(horizontal=16.dp)
-        )
+    if (movies.isNotEmpty()) {
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(modifier = Modifier.padding(bottom = 8.dp)) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
-        LazyRow(
-            contentPadding = PaddingValues(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Spacer(modifier = Modifier.height(8.dp))
 
-        ){
+            LazyRow(
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
 
-            items(movies){ item ->
-                MovieCard(
-                    item,
-                    onMovieClick = onMovieClick
-                )
+            ) {
+
+                items(movies) { item ->
+                    MovieCard(
+                        item,
+                        onMovieClick = onMovieClick
+                    )
+
+                }
+
 
             }
-
 
 
         }
 
 
-
-
     }
-
-
-
 }
