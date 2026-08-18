@@ -29,7 +29,7 @@ fun MovieCard(
     ) {
 
         AsyncImage(
-            model = movie.posterPath,
+            model = "https://image.tmdb.org/t/p/w500" + movie.posterPath,
             contentDescription = movie.title,
             modifier = Modifier
                 .fillMaxWidth()
