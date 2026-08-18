@@ -15,23 +15,29 @@ import androidx.compose.foundation.lazy.items
 @Composable
 
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    HomeScreenContent(state = state, modifier = modifier)
+}
+
+@Composable
+fun HomeScreenContent(state: HomeUiState, modifier: Modifier) {
     when {
         state.isLoading -> {
             CircularProgressIndicator()
         }
 
         state.error != null -> {
-            Text(text = state.error!!)
+            Text(text = state.error)
         }
 
         else -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LazyColumn() {
+            Box(modifier = modifier.fillMaxSize()) {
+                LazyColumn {
 
                     val sections = listOf(
                         "Trending" to state.trendingMovies
@@ -42,7 +48,7 @@ fun HomeScreen(
                             title = title,
                             movies = movies,
                             onMovieClick = {}
-                            )
+                        )
                     }
 
                 }
@@ -50,10 +56,5 @@ fun HomeScreen(
             }
         }
     }
-}
-
-@Composable
-fun HomeScreenContent() {
-
 }
 
