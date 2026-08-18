@@ -33,3 +33,5 @@ google-services.json
 *.hprof
 .artifacts/f657c800-ffa6-4f82-9aff-77de3b916e27/implementation_plan.artifact.md
 .kotlin/sessions/kotlin-compiler-787392057373088943.salive
+.artifacts/b5b9dc7c-77cf-4060-8cfb-cac19a8d0945/implementation_plan.artifact.md
+.artifacts/b5b9dc7c-77cf-4060-8cfb-cac19a8d0945/task.artifact.md
