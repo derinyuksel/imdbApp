@@ -14,11 +14,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imdbapp.model.MovieResponse
+import com.google.android.gms.common.api.Result
 
 @Composable
 fun MoviesSection(
     title: String,
-    movies: List<MovieResponse.Result>
+    movies: List<MovieResponse.Result>,
     onMovieClick: (Int) -> Unit
 ){
 
