@@ -27,10 +27,12 @@ fun MovieCard(
             .width(120.dp)
             .clickable { onMovieClick(movie.id) }
     ) {
+        val imagePath = movie.posterPath ?: movie.profilePath
+        val displayText = movie.title ?: movie.name
 
         AsyncImage(
-            model = "https://image.tmdb.org/t/p/w500" + movie.posterPath,
-            contentDescription = movie.title,
+            model = "https://image.tmdb.org/t/p/w500" + imagePath,
+            contentDescription = displayText,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.DarkGray)
