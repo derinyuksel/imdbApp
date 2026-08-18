@@ -18,7 +18,7 @@ interface TmdbApi {
     suspend fun getUpcomingMovies(): MovieResponse
 
 
-    @GET("trending/people/week")
+    @GET("trending/person/week")
     suspend fun getTrendingPeople(): MovieResponse
 }
 
