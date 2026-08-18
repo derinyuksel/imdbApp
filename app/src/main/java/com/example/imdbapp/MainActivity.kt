@@ -7,14 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imdbapp.home.HomeScreen
+import com.example.imdbapp.home.HomeScreenContent
 import com.example.imdbapp.ui.theme.ImdbAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.imdbapp.home.HomeUiState
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,12 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImdbAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen()
-
-                    /* Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )*/
+                    HomeScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -41,12 +37,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreenPreview() {
     ImdbAppTheme {
-        HomeScreenContent(state = HomeUiState(isLoading = true))
+        HomeScreenContent(state = HomeUiState(isLoading = true), modifier = Modifier
+        )
     }
 }
 
-
-@Composable
-fun HomeScreenContent(){
-
-}
