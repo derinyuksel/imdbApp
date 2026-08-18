@@ -20,7 +20,7 @@ class Repository @Inject constructor(val apiService: TmdbApi) {
 
     suspend fun getHomeData(
         apiCall: suspend ()-> MovieResponse
-    ) : NetworkResult<List<MovieResponse.Result>>{
+    ) : NetworkResult<List<Result>>{
         return try {
             val response = apiCall()
             NetworkResult.Success(response.results)
