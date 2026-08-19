@@ -1,5 +1,6 @@
 package com.example.imdbapp.home
 
+import android.net.Network
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imdbapp.core.NetworkResult
@@ -57,6 +58,11 @@ class HomeViewModel @Inject constructor(
                         topRatedMovies = (topRated as? NetworkResult.Success)?.data.orEmpty(),
                         upcomingMovies = (upcoming as? NetworkResult.Success)?.data.orEmpty(),
                         trendingPeople = (people as? NetworkResult.Success)?.data.orEmpty(),
+
+                        //Error Catcher
+                        error = (trending as? NetworkResult.Error)?.message
+                            ?: (people as? NetworkResult.Error)?.message
+                            ?: (popular as? NetworkResult.Error)?.message
                     )
                 }
 
