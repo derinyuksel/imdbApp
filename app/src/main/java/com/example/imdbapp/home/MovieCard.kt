@@ -41,8 +41,5 @@ fun MovieCard(
         )
 
 
-
-
-
     }
 }
