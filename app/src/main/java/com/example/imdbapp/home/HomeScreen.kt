@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onMovieClick: (Int) -> Unit,
+    onPersonClick: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
@@ -51,7 +53,10 @@ fun HomeScreenContent(state: HomeUiState, modifier: Modifier) {
                         MoviesSection(
                             title = title,
                             movies = movies,
-                            onMovieClick = {}
+                            onMovieClick = { id ->
+                                if (title == "Trending People") onPersonClick(id)
+                                else onMovieClick(id)
+                            }
                         )
                     }
 
