@@ -39,7 +39,14 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable(route = Screen.Home.route) {
-                            HomeScreen() //Define what home destination is
+                            HomeScreen(
+                                onMovieClick = { movieId ->
+                                    navController.navigate(Screen.MovieDetail.createRoute(movieId))
+                                },
+                                onPersonClick = { personId ->
+                                    navController.navigate(Screen.PersonDetail.createRoute(personId))
+                                }
+                            ) //Define what home destination is
                         }
 
 
