@@ -53,15 +53,21 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = Screen.MovieDetail.route) { backStackEntry ->
                             MovieDetailScreen(
-                                onBackClick = {navController.popBackStack()}
+                                onBackClick = {navController.popBackStack()},
+                                onActorClick = { personId ->
+                                    navController.navigate(Screen.PersonDetail.createRoute(personId))
+                                }
                             )
 
                         }
 
-                        composable(route = Screen.PersonDetail.route) { backStackEntry ->
-                            val personId = backStackEntry.arguments?.getString("personId")
-                            Text(text = "Person Detail for ID: $personId")
-
+                        composable(route = Screen.PersonDetail.route) {
+                            PersonDetailScreen(
+                                onBackClick = { navController.popBackStack() },
+                                onMovieClick = { movieId ->
+                                    navController.navigate(Screen.MovieDetail.createRoute(movieId))
+                                }
+                            )
                         }
 
 
