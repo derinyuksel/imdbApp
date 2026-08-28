@@ -25,33 +25,40 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 @Composable
 fun MovieDetailScreen(
+    onBackClick: () -> Unit = {},
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    MovieDetailContent(state = state)
+    MovieDetailContent(
+        state = state,
+        onBackClick = onBackClick
+    )
+
+
 }
 
 @Composable
 fun MovieDetailContent(
     state: MovieDetailUiState,
     modifier: Modifier = Modifier,
-    contentAlignment: Alignment = Alignment.Center
+    contentAlignment: Alignment = Alignment.Center,
+    onBackClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when {
-            state.isLoading -> {
-                CircularProgressIndicator()
-            }
+            state.isLoading -> { CircularProgressIndicator() }
 
-            state.error != null -> {
-                Text(text = state.error)
-            }
+            state.error != null -> { Text(text = state.error) }
 
             state.movie != null -> {
                 Column(
@@ -59,7 +66,15 @@ fun MovieDetailContent(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState()),
 
-                    ) { //Big image of the movie
+                    ) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+
+                    //Big image of the movie
                     AsyncImage(
                         model = "https://image.tmdb.org/t/p/w500" + state.movie.backdropPath,
                         contentDescription = state.movie.title,
