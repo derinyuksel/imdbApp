@@ -23,11 +23,21 @@ fun HomeScreen(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    HomeScreenContent(state = state, modifier = modifier)
+    HomeScreenContent(
+        state = state,
+        modifier = modifier,
+        onMovieClick = onMovieClick,
+        onPersonClick = onPersonClick
+    )
 }
 
 @Composable
-fun HomeScreenContent(state: HomeUiState, modifier: Modifier) {
+fun HomeScreenContent(
+    state: HomeUiState,
+    modifier: Modifier = Modifier,
+    onMovieClick: (Int) -> Unit,
+    onPersonClick: (Int) -> Unit
+) {
     when {
         state.isLoading -> {
             CircularProgressIndicator()
