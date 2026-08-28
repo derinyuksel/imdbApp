@@ -20,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.example.imdbapp.home.HomeUiState
 import com.example.imdbapp.navigation.Screen
 import androidx.navigation.compose.composable
+import com.example.imdbapp.details.MovieDetailScreen
 
 
 @AndroidEntryPoint
@@ -51,8 +52,9 @@ class MainActivity : ComponentActivity() {
 
 
                         composable(route = Screen.MovieDetail.route) { backStackEntry ->
-                            val movieId = backStackEntry.arguments?.getString("movieId")
-                            Text(text = "Movie Detail for ID: $movieId")
+                            MovieDetailScreen(
+                                onBackClick = {navController.popBackStack()}
+                            )
 
                         }
 
@@ -61,6 +63,8 @@ class MainActivity : ComponentActivity() {
                             Text(text = "Person Detail for ID: $personId")
 
                         }
+
+
                     }
                 }
             }
@@ -73,7 +77,10 @@ class MainActivity : ComponentActivity() {
     fun HomeScreenPreview() {
         ImdbAppTheme {
             HomeScreenContent(
-                state = HomeUiState(isLoading = true), modifier = Modifier
+                state = HomeUiState(isLoading = true),
+                modifier = Modifier,
+                onMovieClick = {},
+                onPersonClick = {}
             )
         }
     }
