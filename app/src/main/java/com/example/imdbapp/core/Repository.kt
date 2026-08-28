@@ -18,6 +18,8 @@ class Repository @Inject constructor(val apiService: TmdbApi) {
 
     suspend fun getPersonMovies(id: Int) = getDetails { apiService.getPersonMovies(id) }
 
+    suspend fun getPersonDetails(id: Int) = getDetails { apiService.getPersonDetails(id) }
+
 
     suspend fun getHomeData(
         apiCall: suspend () -> MovieResponse
