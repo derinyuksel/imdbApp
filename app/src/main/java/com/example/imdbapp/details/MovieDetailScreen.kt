@@ -1,5 +1,6 @@
 package com.example.imdbapp.details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.material3.IconButton
 @Composable
 fun MovieDetailScreen(
     onBackClick: () -> Unit = {},
+    onActorClick: (Int) -> Unit,
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,6 +51,7 @@ fun MovieDetailContent(
     state: MovieDetailUiState,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
+    onActorClick: (Int) -> Unit,
     onBackClick: () -> Unit = {}
 ) {
     Box(
@@ -117,7 +120,9 @@ fun MovieDetailContent(
                             contentPadding = PaddingValues(top = 8.dp)
                         ) {
                             items(state.cast) { actor ->
-                                Text(text = actor.name)
+                                Text(
+                                    text = actor.name,
+                                    modifier = Modifier.clickable {onActorClick(actor.id)})
                             }
 
                         }
