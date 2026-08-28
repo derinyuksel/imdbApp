@@ -19,3 +19,12 @@ data class MovieCreditsResponse(
 data class PersonMovieCreditsResponse(
     val cast: List<Result>
 )
+@Serializable
+data class PersonDetailResponse(
+    val id: Int,
+    val name: String,
+    @SerialName("profile_path") val profilePath: String? = null,
+    val biography: String? = null,
+    val birthday: String? = null,
+    @SerialName("place_of_birth") val placeOfBirth: String? = null
+)
