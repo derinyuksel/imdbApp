@@ -21,6 +21,7 @@ import com.example.imdbapp.home.HomeUiState
 import com.example.imdbapp.navigation.Screen
 import androidx.navigation.compose.composable
 import com.example.imdbapp.details.MovieDetailScreen
+import com.example.imdbapp.details.PersonDetailScreen
 
 
 @AndroidEntryPoint
