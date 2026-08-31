@@ -40,7 +40,8 @@ fun MovieDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     MovieDetailContent(
         state = state,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onActorClick = onActorClick
     )
 
 
