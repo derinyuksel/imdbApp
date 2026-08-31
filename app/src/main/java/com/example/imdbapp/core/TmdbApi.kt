@@ -1,5 +1,7 @@
 package com.example.imdbapp.core
 
+import android.graphics.Movie
+import com.example.imdbapp.model.GenreResponse
 import com.example.imdbapp.model.MovieCreditsResponse
 import com.example.imdbapp.model.MovieResponse
 import com.example.imdbapp.model.PersonDetailResponse
@@ -36,6 +38,13 @@ interface TmdbApi {
 
     @GET("person/{person_id}")
     suspend fun getPersonDetails(@Path("person_id") id: Int): PersonDetailResponse
+
+    //Movie genres
+    @GET ("genre/movie/list")
+    suspend fun getMovieGenres(): GenreResponse
+
+    @GET ("tv/popular")
+    suspend fun getPopularTvShows(): MovieResponse
 
 
 
