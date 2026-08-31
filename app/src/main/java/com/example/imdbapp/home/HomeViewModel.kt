@@ -41,6 +41,9 @@ class HomeViewModel @Inject constructor(
                 val topRatedMovies = async { repo.getTopRatedMovies() }
                 val upcomingMovies = async { repo.getUpcomingMovies() }
                 val trendingPeople = async { repo.getTrendingPeople() }
+                val genresDeferred = async {repo.getMovieGenres() }
+                val tvShowsDeferred = async { repo.getPopularTvShows()}
+
 
 
                 val trending = trendingMovies.await()
@@ -48,6 +51,8 @@ class HomeViewModel @Inject constructor(
                 val topRated = topRatedMovies.await()
                 val upcoming = upcomingMovies.await()
                 val people = trendingPeople.await()
+                val genres = genresDeferred.await()
+                val tvShows = tvShowsDeferred.await()
 
 
                 _uiState.update {
@@ -58,6 +63,8 @@ class HomeViewModel @Inject constructor(
                         topRatedMovies = (topRated as? NetworkResult.Success)?.data.orEmpty(),
                         upcomingMovies = (upcoming as? NetworkResult.Success)?.data.orEmpty(),
                         trendingPeople = (people as? NetworkResult.Success)?.data.orEmpty(),
+                        tvShows = (tvShows as? NetworkResult.Success)?.data.orEmpty(),
+                        genres = (genres as? NetworkResult.Success)?.data?.genres.orEmpty(),
 
                         //Error Catcher
                         error = (trending as? NetworkResult.Error)?.message
@@ -71,4 +78,17 @@ class HomeViewModel @Inject constructor(
 
         }
     }
+
+    //When clicked on "Movies", "TV Series", "Actors", or "All"
+    fun selectTypeFilter(type: String) {
+        _uiState.update {it.copy(selectedType = type)}
+    }
+
+    fun selectGenreFilter(genreId: Int?) {
+        _uiState.update {state ->
+            val newGenreId = if (state.selectedGenreId == genreId) null else genreId
+            state.copy(selectedGenreId = newGenreId)
+        }
+    }
+
 }
