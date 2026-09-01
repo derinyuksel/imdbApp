@@ -5,8 +5,10 @@ import com.example.imdbapp.model.Result
 
 data class HomeUiState(
     val isLoading: Boolean = false,
-    val selectedType: String = "All", //Current selected filter
-    val selectedGenreId: Int? = null, // Selected genre
+    val selectedType: String = "All",
+    val selectedGenreId: Int? = null,
+    val selectedYear: String = "All",
+    val selectedMinRating: Double? = null,
     val genres: List<Genre> = emptyList(),
     val trendingMovies: List<Result> = emptyList(),
     val popularMovies: List<Result> = emptyList(),
