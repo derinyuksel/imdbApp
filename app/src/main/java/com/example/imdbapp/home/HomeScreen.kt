@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.lazy.items
 import kotlin.collections.filter
+import com.example.imdbapp.model.Result
 
 @Composable
 fun HomeScreen(
@@ -29,7 +30,7 @@ fun HomeScreen(
         onMovieClick = onMovieClick,
         onPersonClick = onPersonClick,
         onTypeSelected = { type -> viewModel.selectTypeFilter(type) },
-        onGenreSelcted = { genreId -> viewModel.selectGenreFilter(genreId) }
+        onGenreSelected = { genreId -> viewModel.selectGenreFilter(genreId) }
     )
 }
 
@@ -39,7 +40,7 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
     onMovieClick: (Int) -> Unit = {},
     onPersonClick: (Int) -> Unit = {},
-    onTypeSelected: (String) -> Unit ={},
+    onTypeSelected: (String) -> Unit = {},
     onGenreSelected: (Int?) -> Unit = {}
 ) {
     when {
@@ -52,17 +53,44 @@ fun HomeScreenContent(
         }
 
         else -> {
+            //Filter movies & TV series lists by selected genre ID
+            val filteredTrending = filterByGenre(state.trendingMovies, state.selectedGenreId)
+            val filteredPopular = filterByGenre(state.popularMovies, state.selectedGenreId)
+            val filteredTopRated = filterByGenre(state.topRatedMovies, state.selectedGenreId)
+            val filteredUpcoming = filterByGenre(state.upcomingMovies, state.selectedGenreId)
+            val filteredTv = filterByGenre(state.tvShows, state.selectedGenreId)
+
+            val sections = mutableListOf<Pair<String, List<Result>>>()
+
+            if (state.selectedType == "All" || state.selectedType == "Movies") {
+                sections.add("Trending" to filteredTrending)
+                sections.add("Popular" to filteredPopular)
+                sections.add("Top Rated" to filteredTopRated)
+                sections.add("Upcoming" to filteredUpcoming)
+            }
+
+            if (state.selectedType == "All" || state.selectedType == "TV Series") {
+                sections.add("Popular TV Series" to filteredTv)
+            }
+
+            if (state.selectedType == "All" || state.selectedType == "Actors") {
+                sections.add("Trending People" to state.trendingPeople)
+            }
+
             Box(modifier = modifier.fillMaxSize()) {
                 LazyColumn {
+                    // Filter buttons on the top
+                    item {
+                        FilterSection(
+                            selectedType = state.selectedType,
+                            selectedGenreId = state.selectedGenreId,
+                            genres = state.genres,
+                            onTypeSelected = onTypeSelected,
+                            onGenreSelected = onGenreSelected
+                        )
+                    }
 
-                    val sections = listOf(
-                        "Trending" to state.trendingMovies,
-                        "Popular" to state.popularMovies,
-                        "Top Rated" to state.topRatedMovies,
-                        "Upcoming" to state.upcomingMovies,
-                        "Trending People" to state.trendingPeople
-                    )
-
+                    // Movies, series, people section
                     items(sections) { (title, movies) ->
                         MoviesSection(
                             title = title,
@@ -73,17 +101,20 @@ fun HomeScreenContent(
                             }
                         )
                     }
-
                 }
-
             }
         }
-    }
-}
 
+
+    }
+
+
+}
 
 fun filterByGenre(items: List<Result>, genreId: Int?): List<Result> {
-    if (genreId == null) return items //If no genre is selected, keeps everything
-    return items.filter { item -> item.genreIds?.contains(genreId) == true}
+    if (genreId == null) return items
+    return items.filter { item -> item.genreIds?.contains(genreId) == true }
 }
+
+
 
