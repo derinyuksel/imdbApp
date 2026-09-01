@@ -91,4 +91,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    //When clicked on Year filter
+    fun selectYearFilter(year: String) {
+        _uiState.update { it.copy(selectedYear = year) }
+    }
+
+    // When the user clicks a Rating chip
+    fun selectRatingFilter(minRating: Double?) {
+        _uiState.update { state ->
+            // Toggle off if tapping the same rating again
+            val newRating = if (state.selectedMinRating == minRating) null else minRating
+            state.copy(selectedMinRating = newRating)
+        }
+    }
+
+
 }
