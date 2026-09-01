@@ -22,6 +22,17 @@ import com.example.imdbapp.navigation.Screen
 import androidx.navigation.compose.composable
 import com.example.imdbapp.details.MovieDetailScreen
 import com.example.imdbapp.details.PersonDetailScreen
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.imdbapp.search.SearchScreen
+import com.example.imdbapp.settings.SettingsScreen
 
 
 @AndroidEntryPoint
@@ -31,15 +42,90 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ImdbAppTheme {
-                val navController = rememberNavController() //Controller navigation part
+                val navController = rememberNavController()
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+
+                        // Only show bottom navigation on main tabs (Home, Search, Settings)
+                        if (currentRoute in listOf(
+                                Screen.Home.route,
+                                Screen.Search.route,
+                                Screen.Settings.route
+                            )
+                        ) {
+                            NavigationBar {
+                                // Tab 1: Home
+                                NavigationBarItem(
+                                    selected = (currentRoute == Screen.Home.route),
+                                    onClick = {
+                                        navController.navigate(Screen.Home.route) {
+                                            popUpTo(Screen.Home.route) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Default.Home,
+                                            contentDescription = "Home"
+                                        )
+                                    },
+                                    label = { Text("Home") }
+                                )
+
+                                // Tab 2: Search
+                                NavigationBarItem(
+                                    selected = (currentRoute == Screen.Search.route),
+                                    onClick = {
+                                        navController.navigate(Screen.Search.route) {
+                                            popUpTo(Screen.Home.route) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Default.Search,
+                                            contentDescription = "Search"
+                                        )
+                                    },
+                                    label = { Text("Search") }
+                                )
+
+                                // Tab 3: Settings
+                                NavigationBarItem(
+                                    selected = (currentRoute == Screen.Settings.route),
+                                    onClick = {
+                                        navController.navigate(Screen.Settings.route) {
+                                            popUpTo(Screen.Home.route) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Default.Settings,
+                                            contentDescription = "Settings"
+                                        )
+                                    },
+                                    label = { Text("Settings") }
+                                )
+                            }
+                        }
+                    }
+                ) { innerPadding ->
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Home.route, //Start on the home screen
+                        startDestination = Screen.Home.route,
                         modifier = Modifier.padding(innerPadding)
                     ) {
+                        // 1. Home Route
                         composable(route = Screen.Home.route) {
                             HomeScreen(
                                 onMovieClick = { movieId ->
@@ -48,20 +134,34 @@ class MainActivity : ComponentActivity() {
                                 onPersonClick = { personId ->
                                     navController.navigate(Screen.PersonDetail.createRoute(personId))
                                 }
-                            ) //Define what home destination is
+                            )
                         }
 
+                        // 2. Search Route
+                        composable(route = Screen.Search.route) {
+                            SearchScreen(
+                                onMovieClick = { movieId ->
+                                    navController.navigate(Screen.MovieDetail.createRoute(movieId))
+                                }
+                            )
+                        }
 
-                        composable(route = Screen.MovieDetail.route) { backStackEntry ->
+                        // 3. Settings Route
+                        composable(route = Screen.Settings.route) {
+                            SettingsScreen()
+                        }
+
+                        // 4. Movie Detail Route
+                        composable(route = Screen.MovieDetail.route) {
                             MovieDetailScreen(
-                                onBackClick = {navController.popBackStack()},
+                                onBackClick = { navController.popBackStack() },
                                 onActorClick = { personId ->
                                     navController.navigate(Screen.PersonDetail.createRoute(personId))
                                 }
                             )
-
                         }
 
+                        // 5. Person Detail Route
                         composable(route = Screen.PersonDetail.route) {
                             PersonDetailScreen(
                                 onBackClick = { navController.popBackStack() },
@@ -70,26 +170,25 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-
-
                     }
+
+
                 }
             }
         }
     }
-
-
-    @Preview(showBackground = true)
-    @Composable
-    fun HomeScreenPreview() {
-        ImdbAppTheme {
-            HomeScreenContent(
-                state = HomeUiState(isLoading = true),
-                modifier = Modifier,
-                onMovieClick = {},
-                onPersonClick = {}
-            )
-        }
-    }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    ImdbAppTheme {
+        HomeScreenContent(
+            state = HomeUiState(isLoading = true),
+            modifier = Modifier,
+            onMovieClick = {},
+            onPersonClick = {}
+        )
+    }
+}
