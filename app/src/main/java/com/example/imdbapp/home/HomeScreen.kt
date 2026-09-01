@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.lazy.items
+import kotlin.collections.filter
 
 @Composable
-
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onMovieClick: (Int) -> Unit,
@@ -27,7 +27,9 @@ fun HomeScreen(
         state = state,
         modifier = modifier,
         onMovieClick = onMovieClick,
-        onPersonClick = onPersonClick
+        onPersonClick = onPersonClick,
+        onTypeSelected = { type -> viewModel.selectTypeFilter(type) },
+        onGenreSelcted = { genreId -> viewModel.selectGenreFilter(genreId) }
     )
 }
 
@@ -35,8 +37,10 @@ fun HomeScreen(
 fun HomeScreenContent(
     state: HomeUiState,
     modifier: Modifier = Modifier,
-    onMovieClick: (Int) -> Unit,
-    onPersonClick: (Int) -> Unit
+    onMovieClick: (Int) -> Unit = {},
+    onPersonClick: (Int) -> Unit = {},
+    onTypeSelected: (String) -> Unit ={},
+    onGenreSelected: (Int?) -> Unit = {}
 ) {
     when {
         state.isLoading -> {
@@ -75,5 +79,11 @@ fun HomeScreenContent(
             }
         }
     }
+}
+
+
+fun filterByGenre(items: List<Result>, genreId: Int?): List<Result> {
+    if (genreId == null) return items //If no genre is selected, keeps everything
+    return items.filter { item -> item.genreIds?.contains(genreId) == true}
 }
 
