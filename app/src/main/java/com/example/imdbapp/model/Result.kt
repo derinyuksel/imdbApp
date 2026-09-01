@@ -2,6 +2,7 @@ package com.example.imdbapp.model
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import com.example.imdbapp.model.Genre
 
 
 @Serializable
@@ -22,5 +23,6 @@ data class Result(
     val title: String? = null,
     val video: Boolean? = null,
     @SerialName("vote_average") val voteAverage: Double? = null,
-    @SerialName("vote_count") val voteCount: Int? = null
+    @SerialName("vote_count") val voteCount: Int? = null,
+    @SerialName("genres") val genres: List<Genre>? = null,
 )
