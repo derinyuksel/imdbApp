@@ -30,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.AssistChip
 
 @Composable
 fun MovieDetailScreen(
@@ -101,7 +102,22 @@ fun MovieDetailContent(
                             style = MaterialTheme.typography.titleLarge
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (!state.movie.genres.isNullOrEmpty()) {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(vertical = 8.dp)
+                            ) {
+                                items(state.movie.genres) { genre ->
+                                    AssistChip(
+                                        onClick = {}, //Can be clicked but is not functional
+                                        label = { Text(text = genre.name) }
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
 
                         Text(
                             text = state.movie.overview ?: "Unknown Overview",
