@@ -55,7 +55,10 @@ fun HomeScreen(
         onMovieClick = onMovieClick,
         onPersonClick = onPersonClick,
         onTypeSelected = { type -> viewModel.selectTypeFilter(type) },
-        onGenreSelected = { genreId -> viewModel.selectGenreFilter(genreId) }
+        onGenreSelected = { genreId -> viewModel.selectGenreFilter(genreId) },
+        onYearSelected = { year -> viewModel.selectYearFilter(year) },
+        onRatingSelected = { rating -> viewModel.selectRatingFilter(rating)
+        }
     )
 }
 
@@ -66,7 +69,9 @@ fun HomeScreenContent(
     onMovieClick: (Int) -> Unit = {},
     onPersonClick: (Int) -> Unit = {},
     onTypeSelected: (String) -> Unit = {},
-    onGenreSelected: (Int?) -> Unit = {}
+    onGenreSelected: (Int?) -> Unit = {},
+    onYearSelected: (String) -> Unit = {},
+    onRatingSelected: (Double?) -> Unit = {}
 ) {
     when {
         state.isLoading -> {
@@ -79,11 +84,11 @@ fun HomeScreenContent(
 
         else -> {
             //Filter movies & TV series lists by selected genre ID
-            val filteredTrending = filterByGenre(state.trendingMovies, state.selectedGenreId)
-            val filteredPopular = filterByGenre(state.popularMovies, state.selectedGenreId)
-            val filteredTopRated = filterByGenre(state.topRatedMovies, state.selectedGenreId)
-            val filteredUpcoming = filterByGenre(state.upcomingMovies, state.selectedGenreId)
-            val filteredTv = filterByGenre(state.tvShows, state.selectedGenreId)
+            val filteredTrending = filterByRating(filterByYear(filterByGenre(state.trendingMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
+            val filteredPopular = filterByRating(filterByYear(filterByGenre(state.popularMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
+            val filteredTopRated = filterByRating(filterByYear(filterByGenre(state.topRatedMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
+            val filteredUpcoming = filterByRating(filterByYear(filterByGenre(state.upcomingMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
+            val filteredTv = filterByRating(filterByYear(filterByGenre(state.tvShows, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
 
             val sections = mutableListOf<Pair<String, List<Result>>>()
 
@@ -114,14 +119,18 @@ fun HomeScreenContent(
                         }
                     }
 
-                    // Filter buttons on the top
+                    // Filter buttons on top
                     item {
                         FilterSection(
                             selectedType = state.selectedType,
                             selectedGenreId = state.selectedGenreId,
+                            selectedYear = state.selectedYear,
+                            selectedMinRating = state.selectedMinRating,
                             genres = state.genres,
                             onTypeSelected = onTypeSelected,
-                            onGenreSelected = onGenreSelected
+                            onGenreSelected = onGenreSelected,
+                            onYearSelected = onYearSelected,
+                            onRatingSelected = onRatingSelected
                         )
                     }
 
@@ -145,6 +154,33 @@ fun HomeScreenContent(
 
 
 }
+
+fun filterByYear(items: List<Result>, selectedYear: String): List<Result> {
+    if (selectedYear == "All") return items
+
+
+    return items.filter { movie ->
+
+        val year = movie.releaseDate?.take(4)?.toIntOrNull()
+
+        when (selectedYear) {
+            "2020s" -> year != null && year >= 2020
+            "2010s" -> year != null && year in 2010..2019
+            "Classics" -> year != null && year < 2010
+            else -> true
+        }
+    }
+}
+
+
+fun filterByRating(items: List<Result>, minRating: Double?): List<Result> {
+    if (minRating == null) return items
+
+    return items.filter { movie ->
+        movie.voteAverage != null && movie.voteAverage >= minRating
+    }
+}
+
 
 fun filterByGenre(items: List<Result>, genreId: Int?): List<Result> {
     if (genreId == null) return items
