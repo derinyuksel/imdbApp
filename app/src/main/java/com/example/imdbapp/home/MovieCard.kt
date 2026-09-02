@@ -19,7 +19,8 @@ import com.example.imdbapp.model.Result
 @Composable
 fun MovieCard(
     movie: Result,
-    onMovieClick: (Int) -> Unit
+    onMovieClick: (Int) -> Unit,
+    modifier: Modifier = Modifier.width(120.dp)
 ) {
 
     Card(

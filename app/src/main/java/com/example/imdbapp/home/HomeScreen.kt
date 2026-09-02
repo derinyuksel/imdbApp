@@ -242,7 +242,7 @@ fun FeaturedBanner(
                 // Watch trailer button
                 Button(
                     onClick = {
-                        // Opens YouTube trailer placeholder URL in device browser or YouTube app!
+                        //Rick Astley music video as placeholder for every movie
                         uriHandler.openUri("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
