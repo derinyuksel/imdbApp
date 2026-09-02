@@ -67,26 +67,17 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Home.route),
                                     onClick = {
-                                        if (!navController.popBackStack(
-                                                Screen.Home.route,
-                                                inclusive = false
-                                            )
-                                        ) {
-                                            navController.navigate(Screen.Home.route) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
+                                        navController.navigate(Screen.Home.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
                                             }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
                                     },
-                                    icon = {
-                                        Icon(
+                                    icon = { Icon(
                                             Icons.Default.Home,
-                                            contentDescription = "Home"
-                                        )
-                                    },
+                                            contentDescription = "Home") },
                                     label = { Text("Home") }
                                 )
 
@@ -94,25 +85,17 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Search.route),
                                     onClick = {
-                                        if (navController.popBackStack(
-                                                Screen.Home.route,
-                                                inclusive = false
-                                            )
-                                        )
-                                            navController.navigate(Screen.Search.route) {
-                                                popUpTo(navController.graph.findStartDestination().id)
-                                                { saveState = true }
-                                                launchSingleTop = true
-                                                restoreState = true
-
+                                        navController.navigate(Screen.Search.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
                                             }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     },
-                                    icon = {
-                                        Icon(
+                                    icon = { Icon(
                                             Icons.Default.Search,
-                                            contentDescription = "Search"
-                                        )
-                                    },
+                                            contentDescription = "Search") },
                                     label = { Text("Search") }
                                 )
 
