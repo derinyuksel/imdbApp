@@ -51,11 +51,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
 
-                        // Only show bottom navigation on main tabs (Home, Search, Settings)
+
                         if (currentRoute in listOf(
                                 Screen.Home.route,
                                 Screen.Search.route,
-                                Screen.Settings.route
+                                Screen.Settings.route,
+                                Screen.MovieDetail.route,
+                                Screen.PersonDetail.route,
                             )
                         ) {
                             NavigationBar {
