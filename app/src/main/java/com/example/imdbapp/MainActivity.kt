@@ -1,5 +1,6 @@
 package com.example.imdbapp
 
+import android.net.http.SslCertificate.restoreState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.imdbapp.search.SearchScreen
 import com.example.imdbapp.settings.SettingsScreen
+import androidx.navigation.NavGraph.Companion.findStartDestination
 
 
 @AndroidEntryPoint
@@ -61,14 +63,22 @@ class MainActivity : ComponentActivity() {
                             )
                         ) {
                             NavigationBar {
-                                // Tab 1: Home
+                                // Home Tab
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Home.route),
                                     onClick = {
-                                        navController.navigate(Screen.Home.route) {
-                                            popUpTo(Screen.Home.route) { saveState = true }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                        if (!navController.popBackStack(
+                                                Screen.Home.route,
+                                                inclusive = false
+                                            )
+                                        ) {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
                                     },
                                     icon = {
@@ -80,15 +90,22 @@ class MainActivity : ComponentActivity() {
                                     label = { Text("Home") }
                                 )
 
-                                // Tab 2: Search
+                                // Search Tab
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Search.route),
                                     onClick = {
-                                        navController.navigate(Screen.Search.route) {
-                                            popUpTo(Screen.Home.route) { saveState = true }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
+                                        if (navController.popBackStack(
+                                                Screen.Home.route,
+                                                inclusive = false
+                                            )
+                                        )
+                                            navController.navigate(Screen.Search.route) {
+                                                popUpTo(navController.graph.findStartDestination().id)
+                                                { saveState = true }
+                                                launchSingleTop = true
+                                                restoreState = true
+
+                                            }
                                     },
                                     icon = {
                                         Icon(
@@ -99,14 +116,23 @@ class MainActivity : ComponentActivity() {
                                     label = { Text("Search") }
                                 )
 
-                                // Tab 3: Settings
+                                // Settings Tab
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Settings.route),
                                     onClick = {
-                                        navController.navigate(Screen.Settings.route) {
-                                            popUpTo(Screen.Home.route) { saveState = true }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                        if (!navController.popBackStack(
+                                                Screen.Settings.route,
+                                                inclusive = false
+                                            )
+                                        ) {
+                                            navController.navigate(Screen.Settings.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
                                     },
                                     icon = {
@@ -127,7 +153,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.Home.route,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        // 1. Home Route
+                        // Home Route
                         composable(route = Screen.Home.route) {
                             HomeScreen(
                                 onMovieClick = { movieId ->
@@ -139,7 +165,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // 2. Search Route
+                        // Search Route
                         composable(route = Screen.Search.route) {
                             SearchScreen(
                                 onMovieClick = { movieId ->
@@ -148,12 +174,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // 3. Settings Route
+                        // Settings Route
                         composable(route = Screen.Settings.route) {
                             SettingsScreen()
                         }
 
-                        // 4. Movie Detail Route
+                        // Movie Detail Route
                         composable(route = Screen.MovieDetail.route) {
                             MovieDetailScreen(
                                 onBackClick = { navController.popBackStack() },
@@ -163,7 +189,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // 5. Person Detail Route
+                        // Person Detail Route
                         composable(route = Screen.PersonDetail.route) {
                             PersonDetailScreen(
                                 onBackClick = { navController.popBackStack() },
