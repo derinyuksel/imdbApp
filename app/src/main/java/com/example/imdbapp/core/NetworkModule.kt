@@ -1,5 +1,6 @@
 package com.example.imdbapp.core
 
+import com.example.imdbapp.BuildConfig
 import com.example.imdbapp.core.NetworkConstants.CONNECT_TIMEOUT
 import com.example.imdbapp.core.NetworkConstants.READ_TIMEOUT
 import com.example.imdbapp.core.NetworkConstants.WRITE_TIMEOUT
@@ -26,7 +27,7 @@ object NetworkModule{
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient) : Retrofit{
         return  Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(
                 json.asConverterFactory("application/json".toMediaType())

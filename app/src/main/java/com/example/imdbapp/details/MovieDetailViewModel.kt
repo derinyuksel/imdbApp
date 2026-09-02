@@ -17,7 +17,7 @@ import com.example.imdbapp.core.NetworkResult
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
     private val repo: Repository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val movieId: String = checkNotNull(savedStateHandle["movieId"])
