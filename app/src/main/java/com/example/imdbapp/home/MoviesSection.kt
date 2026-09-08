@@ -22,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 fun MoviesSection(
     title: String,
     movies: List<Result>,
+    watchlistIds: Set<Int> = emptySet(),
+    onToggleWatchlist: (Result) -> Unit = {},
     onMovieClick: (Int) -> Unit
 ) {
 
@@ -44,7 +46,9 @@ fun MoviesSection(
 
                 items(movies) { item ->
                     MovieCard(
-                        item,
+                       movie = item,
+                        isFavorite = watchlistIds.contains(item.id),
+                        onToggleFavorite = { onToggleWatchlist(item) },
                         onMovieClick = onMovieClick
                     )
 

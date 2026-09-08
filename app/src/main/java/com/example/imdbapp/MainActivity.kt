@@ -1,10 +1,10 @@
 package com.example.imdbapp
 
-import android.net.http.SslCertificate.restoreState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import com.example.imdbapp.details.MovieDetailScreen
 import com.example.imdbapp.details.PersonDetailScreen
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -38,6 +39,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import com.example.imdbapp.watchlist.WatchlistScreen
 
 
 @AndroidEntryPoint
@@ -63,6 +66,7 @@ class MainActivity : ComponentActivity() {
                         if (currentRoute in listOf(
                                 Screen.Home.route,
                                 Screen.Search.route,
+                                Screen.Watchlist.route,
                                 Screen.Settings.route,
                                 Screen.MovieDetail.route,
                                 Screen.PersonDetail.route,
@@ -107,6 +111,27 @@ class MainActivity : ComponentActivity() {
                                             Icons.Default.Search,
                                             contentDescription = "Search") },
                                     label = { Text("Search") }
+                                )
+
+                                // Watchlist Tab
+                                NavigationBarItem(
+                                    selected = (currentRoute == Screen.Watchlist.route),
+                                    onClick = {
+                                        navController.navigate(Screen.Watchlist.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Default.Favorite,
+                                            contentDescription = "Watchlist"
+                                        )
+                                    },
+                                    label = { Text("Watchlist") }
                                 )
 
                                 // Settings Tab
@@ -155,6 +180,15 @@ class MainActivity : ComponentActivity() {
                         // Search Route
                         composable(route = Screen.Search.route) {
                             SearchScreen(
+                                onMovieClick = { movieId ->
+                                    navController.navigate(Screen.MovieDetail.createRoute(movieId))
+                                }
+                            )
+                        }
+
+                        // Watchlist Route
+                        composable(route = Screen.Watchlist.route)  {
+                            WatchlistScreen(
                                 onMovieClick = { movieId ->
                                     navController.navigate(Screen.MovieDetail.createRoute(movieId))
                                 }
