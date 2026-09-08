@@ -15,97 +15,83 @@ import com.example.imdbapp.model.Genre
 
 @Composable
 fun FilterSection(
-    selectedType: String,
+    selectedType: ContentType,
     selectedGenreId: Int?,
-    selectedYear: String = "All",
-    selectedMinRating: Double? = null,
+    selectedYear: YearFilter,
+    selectedMinRating: RatingFilter,
     genres: List<Genre>,
-    onTypeSelected: (String) -> Unit,
+    onTypeSelected: (ContentType) -> Unit,
     onGenreSelected: (Int?) -> Unit,
-    onYearSelected: (String) -> Unit = {},
-    onRatingSelected: (Double?) -> Unit = {},
-            modifier: Modifier = Modifier
+    onYearSelected: (YearFilter) -> Unit,
+    onRatingSelected: (RatingFilter) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    // 1. Filter lists
-    val types = listOf("All", "Movies", "TV Series", "Actors")
-    val years = listOf("All", "2020s", "2010s", "Classics")
-    val ratings = listOf(
-        "All Ratings" to null,
-        "8+ ⭐" to 8.0,
-        "7+ ⭐" to 7.0,
-        "6+ ⭐" to 6.0
-    )
-
     Column(modifier = modifier.padding(vertical = 8.dp)) {
 
-        // ROW 1: Content Types
+        // Enum.entries ile liste otomatik geliyor
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(types) { type ->
+            items(ContentType.entries) { type ->
                 FilterChip(
                     selected = (selectedType == type),
                     onClick = { onTypeSelected(type) },
-                    label = { Text(text = type) }
+                    label = { Text(text = type.displayName) }
                 )
             }
         }
 
-        // ROW 2: Genres
-        if (selectedType != "Actors" && genres.isNotEmpty()) {
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
-                item {
-                    FilterChip(
-                        selected = (selectedGenreId == null),
-                        onClick = { onGenreSelected(null) },
-                        label = { Text(text = "All Genres") }
-                    )
-                }
+        if (selectedType != ContentType.ACTORS) {
 
-                items(genres) { genre ->
-                    FilterChip(
-                        selected = (selectedGenreId == genre.id),
-                        onClick = { onGenreSelected(genre.id) },
-                        label = { Text(text = genre.name) }
-                    )
+            if (genres.isNotEmpty()) {
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    item {
+                        FilterChip(
+                            selected = (selectedGenreId == null),
+                            onClick = { onGenreSelected(null) },
+                            label = { Text(text = "All Genres") }
+                        )
+                    }
+                    items(genres) { genre ->
+                        FilterChip(
+                            selected = (selectedGenreId == genre.id),
+                            onClick = { onGenreSelected(genre.id) },
+                            label = { Text(text = genre.name) }
+                        )
+                    }
                 }
             }
-        }
 
-        // ROW 3: Years
-        if (selectedType != "Actors") {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(top = 4.dp)
             ) {
-                items(years) { year ->
+                items(YearFilter.entries) { year ->
                     FilterChip(
                         selected = (selectedYear == year),
                         onClick = { onYearSelected(year) },
-                        label = { Text(text = if (year == "All") "All Years" else year) }
+                        label = { Text(text = year.displayName) }
                     )
                 }
             }
-        }
 
-        // ROW 4: IMDb Ratings
-        if (selectedType != "Actors") {
+
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(top = 4.dp)
             ) {
-                items(ratings) { (label, minRating) ->
+                items(RatingFilter.entries) { rating ->
                     FilterChip(
-                        selected = (selectedMinRating == minRating),
-                        onClick = { onRatingSelected(minRating) },
-                        label = { Text(text = label) }
+                        selected = (selectedMinRating == rating),
+                        onClick = { onRatingSelected(rating) },
+                        label = { Text(text = rating.displayName) }
                     )
                 }
             }
