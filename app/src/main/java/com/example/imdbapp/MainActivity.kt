@@ -35,6 +35,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.imdbapp.search.SearchScreen
 import com.example.imdbapp.settings.SettingsScreen
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
 @AndroidEntryPoint
@@ -44,6 +47,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ImdbAppTheme {
+
+                var homeScrollToTopTrigger by remember { mutableIntStateOf(0) }
+
                 val navController = rememberNavController()
 
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -67,12 +73,16 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Home.route),
                                     onClick = {
-                                        navController.navigate(Screen.Home.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                                        if (currentRoute == Screen.Home.route) {
+                                            homeScrollToTopTrigger++
+                                        } else {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
                                         }
                                     },
                                     icon = { Icon(
@@ -103,24 +113,17 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Settings.route),
                                     onClick = {
-                                        if (!navController.popBackStack(
-                                                Screen.Settings.route,
-                                                inclusive = false
-                                            )
-                                        ) {
-                                            navController.navigate(Screen.Settings.route) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-
-                                                launchSingleTop = true
-                                                restoreState = true
+                                        navController.navigate(Screen.Settings.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
                                             }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
                                     },
                                     icon = {
                                         Icon(
-                                            Icons.Default.Settings,
+                                            imageVector = Icons.Default.Settings,
                                             contentDescription = "Settings"
                                         )
                                     },
@@ -139,6 +142,7 @@ class MainActivity : ComponentActivity() {
                         // Home Route
                         composable(route = Screen.Home.route) {
                             HomeScreen(
+                                scrollToTopTrigger = homeScrollToTopTrigger,
                                 onMovieClick = { movieId ->
                                     navController.navigate(Screen.MovieDetail.createRoute(movieId))
                                 },
