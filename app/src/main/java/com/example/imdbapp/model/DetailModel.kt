@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Cast( //Blueprint for actors
+data class Cast( //Actors
     val id: Int,
     val name: String,
     @SerialName("profile_path") val profilePath: String? = null,
