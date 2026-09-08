@@ -133,13 +133,14 @@ fun MovieDetailContent(
                         )
 
                         LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(top = 8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp)
                         ) {
                             items(state.cast) { actor ->
-                                Text(
-                                    text = actor.name,
-                                    modifier = Modifier.clickable {onActorClick(actor.id)})
+                                CastCard(
+                                    actor = actor,
+                                    onClick = { onActorClick(actor.id) }
+                                )
                             }
 
                         }
