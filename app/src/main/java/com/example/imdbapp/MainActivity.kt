@@ -41,15 +41,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.example.imdbapp.watchlist.WatchlistScreen
+import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.imdbapp.core.ThemeViewModel
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val themeViewModel: ThemeViewModel by viewModels()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ImdbAppTheme {
+
+            val isDarkMode by themeViewModel.isDarkMode.collectAsStateWithLifecycle()
+
+            ImdbAppTheme (darkTheme = isDarkMode) {
+
+                var selectedTab by remember { mutableStateOf(Screen.Home.route) }
 
                 var homeScrollToTopTrigger by remember { mutableIntStateOf(0) }
 
@@ -57,6 +68,13 @@ class MainActivity : ComponentActivity() {
 
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
+
+                LaunchedEffect(navBackStackEntry) {
+                    val route = navBackStackEntry?.destination?.route
+                    if (route in listOf(Screen.Home.route, Screen.Search.route, Screen.Watchlist.route, Screen.Settings.route)) {
+                        selectedTab = route!!
+                    }
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -77,9 +95,14 @@ class MainActivity : ComponentActivity() {
                                 NavigationBarItem(
                                     selected = (currentRoute == Screen.Home.route),
                                     onClick = {
-                                        if (currentRoute == Screen.Home.route) {
-                                            homeScrollToTopTrigger++
-                                        } else {
+                                        if (selectedTab == Screen.Home.route) {
+                                            if (currentRoute == Screen.Home.route) { //Zaten ana ekrandaysa -> başa kaydır
+                                                homeScrollToTopTrigger++
+                                            } else { //Detay sayfasındaysa ana ekrana geri don
+                                                navController.popBackStack(Screen.Home.route, inclusive = false)
+                                            }
+                                        } else { //Baska sekmeden geliyorsa normal
+                                            selectedTab = Screen.Home.route
                                             navController.navigate(Screen.Home.route) {
                                                 popUpTo(navController.graph.findStartDestination().id) {
                                                     saveState = true
@@ -89,69 +112,76 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
-                                    icon = { Icon(
-                                            Icons.Default.Home,
-                                            contentDescription = "Home") },
+                                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                                     label = { Text("Home") }
                                 )
 
                                 // Search Tab
                                 NavigationBarItem(
-                                    selected = (currentRoute == Screen.Search.route),
+                                    selected = (selectedTab == Screen.Search.route),
                                     onClick = {
-                                        navController.navigate(Screen.Search.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                                        if (selectedTab == Screen.Search.route) {
+                                            if (currentRoute != Screen.Search.route) {
+                                                navController.popBackStack(Screen.Search.route, inclusive = false)
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                        } else {
+                                            selectedTab = Screen.Search.route
+                                            navController.navigate(Screen.Search.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
                                     },
-                                    icon = { Icon(
-                                            Icons.Default.Search,
-                                            contentDescription = "Search") },
+                                    icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                                     label = { Text("Search") }
                                 )
 
                                 // Watchlist Tab
                                 NavigationBarItem(
-                                    selected = (currentRoute == Screen.Watchlist.route),
+                                    selected = (selectedTab == Screen.Watchlist.route),
                                     onClick = {
-                                        navController.navigate(Screen.Watchlist.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                                        if (selectedTab == Screen.Watchlist.route) {
+                                            if (currentRoute != Screen.Watchlist.route) {
+                                                navController.popBackStack(Screen.Watchlist.route, inclusive = false)
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                        } else {
+                                            selectedTab = Screen.Watchlist.route
+                                            navController.navigate(Screen.Watchlist.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
                                     },
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Default.Favorite,
-                                            contentDescription = "Watchlist"
-                                        )
-                                    },
+                                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Watchlist") },
                                     label = { Text("Watchlist") }
                                 )
 
                                 // Settings Tab
                                 NavigationBarItem(
-                                    selected = (currentRoute == Screen.Settings.route),
+                                    selected = (selectedTab == Screen.Settings.route),
                                     onClick = {
-                                        navController.navigate(Screen.Settings.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                                        if (selectedTab == Screen.Settings.route) {
+                                            if (currentRoute != Screen.Settings.route) {
+                                                navController.popBackStack(Screen.Settings.route, inclusive = false)
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                        } else {
+                                            selectedTab = Screen.Settings.route
+                                            navController.navigate(Screen.Settings.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
                                     },
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Default.Settings,
-                                            contentDescription = "Settings"
-                                        )
-                                    },
+                                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                                     label = { Text("Settings") }
                                 )
                             }
