@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.example.imdbapp.model.MovieResponse
 import com.example.imdbapp.model.Result
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun MoviesSection(
@@ -29,12 +30,11 @@ fun MoviesSection(
         Column(modifier = Modifier.padding(bottom = 8.dp)) {
             Text(
                 text = title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             LazyRow(
                 contentPadding = PaddingValues(16.dp),
@@ -49,13 +49,7 @@ fun MoviesSection(
                     )
 
                 }
-
-
             }
-
-
         }
-
-
     }
 }
