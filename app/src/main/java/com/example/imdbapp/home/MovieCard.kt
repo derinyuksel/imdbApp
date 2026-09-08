@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,18 +16,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.imdbapp.model.Result
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun MovieCard(
     movie: Result,
     onMovieClick: (Int) -> Unit,
-    modifier: Modifier = Modifier.width(120.dp)
+    modifier: Modifier = Modifier
 ) {
 
     Card(
-        modifier = Modifier
-            .width(120.dp)
-            .clickable { onMovieClick(movie.id) }
+        modifier = modifier
+            .clickable { onMovieClick(movie.id) },
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         val imagePath = movie.posterPath ?: movie.profilePath
         val displayText = movie.title ?: movie.name
@@ -37,7 +43,7 @@ fun MovieCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.DarkGray)
-                .aspectRatio(2f/3f),
+                .aspectRatio(2f / 3f),
             contentScale = ContentScale.Crop
         )
 
