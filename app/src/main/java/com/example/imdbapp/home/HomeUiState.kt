@@ -5,7 +5,7 @@ import com.example.imdbapp.model.Result
 
 data class HomeUiState(
     val isLoading: Boolean = false,
-    val selectedType: String = "All",
+    val selectedType: String = "All", //enum clas olsun
     val selectedGenreId: Int? = null,
     val selectedYear: String = "All",
     val selectedMinRating: Double? = null,
@@ -14,7 +14,8 @@ data class HomeUiState(
     val popularMovies: List<Result> = emptyList(),
     val upcomingMovies: List<Result> = emptyList(),
     val topRatedMovies: List<Result> = emptyList(),
-    val tvShows: List<Result> =emptyList(), //List of popular movies
-    val trendingPeople: List<Result> = emptyList(), //List of popular people
-    val error: String? = null
+    val tvShows: List<Result> =emptyList(),
+    val trendingPeople: List<Result> = emptyList(),
+    val error: String? = null,
+    val watchlistIds: Set<Int> = emptySet()
 )

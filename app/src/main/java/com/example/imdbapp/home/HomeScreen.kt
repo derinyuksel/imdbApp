@@ -73,8 +73,8 @@ fun HomeScreen(
         onTypeSelected = { type -> viewModel.selectTypeFilter(type) },
         onGenreSelected = { genreId -> viewModel.selectGenreFilter(genreId) },
         onYearSelected = { year -> viewModel.selectYearFilter(year) },
-        onRatingSelected = { rating -> viewModel.selectRatingFilter(rating)
-        }
+        onRatingSelected = { rating -> viewModel.selectRatingFilter(rating) },
+        onToggleWatchlist = { movie -> viewModel.toggleWatchlist(movie) }
     )
 }
 
@@ -88,12 +88,46 @@ fun HomeScreenContent(
     onTypeSelected: (String) -> Unit = {},
     onGenreSelected: (Int?) -> Unit = {},
     onYearSelected: (String) -> Unit = {},
-    onRatingSelected: (Double?) -> Unit = {}
+    onRatingSelected: (Double?) -> Unit = {},
+    onToggleWatchlist: (Result) -> Unit = {}
 ) {
-    when {
-        state.isLoading -> {
-            CircularProgressIndicator()
+    when {state.isLoading -> {
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .clip(RoundedCornerShape(28.dp))
+                    .shimmer()
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .height(24.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .shimmer()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                repeat(4) {
+                    Box(
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(180.dp)
+                            .clip(RoundedCornerShape(22.dp))
+                            .shimmer()
+                    )
+                }
+            }
         }
+    }
 
         state.error != null -> {
             Text(text = state.error)
@@ -160,6 +194,8 @@ fun HomeScreenContent(
                         MoviesSection(
                             title = title,
                             movies = movies,
+                            watchlistIds = state.watchlistIds,
+                            onToggleWatchlist = onToggleWatchlist,
                             onMovieClick = { id ->
                                 if (title == "Trending People") onPersonClick(id)
                                 else onMovieClick(id)

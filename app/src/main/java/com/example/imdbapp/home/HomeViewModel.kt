@@ -1,12 +1,10 @@
 package com.example.imdbapp.home
 
-import android.net.Network
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imdbapp.core.NetworkResult
 import com.example.imdbapp.core.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 import kotlin.collections.orEmpty
+import com.example.imdbapp.model.Result
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -27,76 +26,79 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadTrendingMovies()
+        observeWatchlist()
     }
 
-    fun loadTrendingMovies() {
+    private fun observeWatchlist() {
         viewModelScope.launch {
-
-            supervisorScope {
-                _uiState.update {
-                    it.copy(isLoading = true)
-                }
-                val trendingMovies = async { repo.getTrendingMovies() }
-                val popularMovies = async { repo.getPopularMovies() }
-                val topRatedMovies = async { repo.getTopRatedMovies() }
-                val upcomingMovies = async { repo.getUpcomingMovies() }
-                val trendingPeople = async { repo.getTrendingPeople() }
-                val genresDeferred = async {repo.getMovieGenres() }
-                val tvShowsDeferred = async { repo.getPopularTvShows()}
-
-
-
-                val trending = trendingMovies.await()
-                val popular = popularMovies.await()
-                val topRated = topRatedMovies.await()
-                val upcoming = upcomingMovies.await()
-                val people = trendingPeople.await()
-                val genres = genresDeferred.await()
-                val tvShows = tvShowsDeferred.await()
-
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        trendingMovies = (trending as? NetworkResult.Success)?.data.orEmpty(),
-                        popularMovies = (popular as? NetworkResult.Success)?.data.orEmpty(),
-                        topRatedMovies = (topRated as? NetworkResult.Success)?.data.orEmpty(),
-                        upcomingMovies = (upcoming as? NetworkResult.Success)?.data.orEmpty(),
-                        trendingPeople = (people as? NetworkResult.Success)?.data.orEmpty(),
-                        tvShows = (tvShows as? NetworkResult.Success)?.data.orEmpty(),
-                        genres = (genres as? NetworkResult.Success)?.data?.genres.orEmpty(),
-
-                        //Error Catcher
-                        error = (trending as? NetworkResult.Error)?.message
-                            ?: (people as? NetworkResult.Error)?.message
-                            ?: (popular as? NetworkResult.Error)?.message
-                    )
-                }
-
-
+            repo.getWatchlist().collect { watchlist ->
+                _uiState.update { it.copy(watchlistIds = watchlist.map { it.id }.toSet()) }
             }
-
         }
     }
 
-    //When clicked on "Movies", "TV Series", "Actors", or "All"
+    fun loadTrendingMovies() {
+        _uiState.update { it.copy(isLoading = true) }
+
+        viewModelScope.launch {
+            val result = repo.getTrendingMovies()
+            _uiState.update {
+                it.copy(
+                    trendingMovies = (result as? NetworkResult.Success)?.data.orEmpty(),
+                    // Hide main shimmer once the first big piece of data arrives
+                    isLoading = false,
+                    error = if (result is NetworkResult.Error) result.message else it.error
+                )
+            }
+        }
+
+        viewModelScope.launch {
+            val result = repo.getPopularMovies()
+            _uiState.update { it.copy(popularMovies = (result as? NetworkResult.Success)?.data.orEmpty()) }
+        }
+
+        viewModelScope.launch {
+            val result = repo.getTopRatedMovies()
+            _uiState.update { it.copy(topRatedMovies = (result as? NetworkResult.Success)?.data.orEmpty()) }
+        }
+
+        viewModelScope.launch {
+            val result = repo.getUpcomingMovies()
+            _uiState.update { it.copy(upcomingMovies = (result as? NetworkResult.Success)?.data.orEmpty()) }
+        }
+
+        viewModelScope.launch {
+            val result = repo.getTrendingPeople()
+            _uiState.update { it.copy(trendingPeople = (result as? NetworkResult.Success)?.data.orEmpty()) }
+        }
+
+        viewModelScope.launch {
+            val result = repo.getPopularTvShows()
+            _uiState.update { it.copy(tvShows = (result as? NetworkResult.Success)?.data.orEmpty()) }
+        }
+
+
+        viewModelScope.launch {
+            val result = repo.getMovieGenres()
+            _uiState.update { it.copy(genres = (result as? NetworkResult.Success)?.data?.genres.orEmpty()) }
+        }
+    }
+
     fun selectTypeFilter(type: String) {
-        _uiState.update {it.copy(selectedType = type)}
+        _uiState.update { it.copy(selectedType = type) }
     }
 
     fun selectGenreFilter(genreId: Int?) {
-        _uiState.update {state ->
+        _uiState.update { state ->
             val newGenreId = if (state.selectedGenreId == genreId) null else genreId
             state.copy(selectedGenreId = newGenreId)
         }
     }
 
-    //When clicked on Year filter
     fun selectYearFilter(year: String) {
         _uiState.update { it.copy(selectedYear = year) }
     }
 
-    // When the user clicks a Rating chip
     fun selectRatingFilter(minRating: Double?) {
         _uiState.update { state ->
             // Toggle off if tapping the same rating again
@@ -105,5 +107,28 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
+    fun toggleWatchlist(movie: Result) {
+        viewModelScope.launch {
+            val isFavorite = _uiState.value.watchlistIds.contains(movie.id)
+            if (isFavorite) {
+                repo.removeFromWatchlist(
+                    com.example.imdbapp.model.WatchlistMovie(
+                        movie.id,
+                        movie.title ?: "",
+                        movie.posterPath,
+                        movie.voteAverage
+                    )
+                )
+            } else {
+                repo.addToWatchlist(
+                    com.example.imdbapp.model.WatchlistMovie(
+                        movie.id,
+                        movie.title ?: "",
+                        movie.posterPath,
+                        movie.voteAverage
+                    )
+                )
+            }
+        }
+    }
 }
