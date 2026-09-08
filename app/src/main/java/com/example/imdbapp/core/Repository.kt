@@ -4,7 +4,9 @@ import com.example.imdbapp.model.MovieResponse
 import com.example.imdbapp.model.Result
 import javax.inject.Inject
 
-class Repository @Inject constructor(val apiService: TmdbApi) {
+class Repository @Inject constructor(
+    val apiService: TmdbApi,
+    val watchlistDao: WatchlistDao) {
 
     suspend fun getTrendingMovies() = getHomeData { apiService.getTrendingMovies() }
     suspend fun getPopularMovies() = getHomeData { apiService.getPopularMovies() }
@@ -20,7 +22,7 @@ class Repository @Inject constructor(val apiService: TmdbApi) {
 
     suspend fun getPersonDetails(id: Int) = getDetails { apiService.getPersonDetails(id) }
 
-    suspend fun getMovieGenres() = getDetails {apiService.getMovieGenres() }
+    suspend fun getMovieGenres() = getDetails { apiService.getMovieGenres() }
 
     suspend fun getPopularTvShows() = getHomeData { apiService.getPopularTvShows() }
 
@@ -48,4 +50,13 @@ class Repository @Inject constructor(val apiService: TmdbApi) {
     }
 
 
+    fun getWatchlist() = watchlistDao.getWatchlist()
+
+    suspend fun addToWatchlist(movie: com.example.imdbapp.model.WatchlistMovie) =
+        watchlistDao.addToWatchlist(movie)
+
+    suspend fun removeFromWatchlist(movie: com.example.imdbapp.model.WatchlistMovie) =
+        watchlistDao.removeFromWatchlist(movie)
+
+    fun isMovieInWatchlist(id: Int) = watchlistDao.isMovieInWatchlist(id)
 }
