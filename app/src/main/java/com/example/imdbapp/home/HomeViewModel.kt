@@ -84,7 +84,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun selectTypeFilter(type: String) {
+    fun selectTypeFilter(type: ContentType) { //String yerine ContentType enum class ile guncellendi
         _uiState.update { it.copy(selectedType = type) }
     }
 
@@ -95,17 +95,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun selectYearFilter(year: String) {
+    fun selectYearFilter(year: YearFilter) { // String yerine YearFilter enum class aldı
         _uiState.update { it.copy(selectedYear = year) }
     }
 
-    fun selectRatingFilter(minRating: Double?) {
+    fun selectRatingFilter(rating: RatingFilter) { //Double yerine RatingFilter enum class aldi
         _uiState.update { state ->
-            // Toggle off if tapping the same rating again
-            val newRating = if (state.selectedMinRating == minRating) null else minRating
+            val newRating = if (state.selectedMinRating == rating) RatingFilter.ALL else rating
             state.copy(selectedMinRating = newRating)
         }
     }
+
 
     fun toggleWatchlist(movie: Result) {
         viewModelScope.launch {

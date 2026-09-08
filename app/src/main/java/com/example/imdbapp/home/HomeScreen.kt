@@ -85,10 +85,10 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
     onMovieClick: (Int) -> Unit = {},
     onPersonClick: (Int) -> Unit = {},
-    onTypeSelected: (String) -> Unit = {},
+    onTypeSelected: (ContentType) -> Unit = {},
     onGenreSelected: (Int?) -> Unit = {},
-    onYearSelected: (String) -> Unit = {},
-    onRatingSelected: (Double?) -> Unit = {},
+    onYearSelected: (YearFilter) -> Unit = {},
+    onRatingSelected: (RatingFilter) -> Unit = {},
     onToggleWatchlist: (Result) -> Unit = {}
 ) {
     when {state.isLoading -> {
@@ -143,18 +143,19 @@ fun HomeScreenContent(
 
             val sections = mutableListOf<Pair<String, List<Result>>>()
 
-            if (state.selectedType == "All" || state.selectedType == "Movies") {
+            if (state.selectedType == ContentType.ALL || state.selectedType == ContentType.MOVIES) {
                 sections.add("Trending" to filteredTrending)
                 sections.add("Popular" to filteredPopular)
                 sections.add("Top Rated" to filteredTopRated)
                 sections.add("Upcoming" to filteredUpcoming)
             }
 
-            if (state.selectedType == "All" || state.selectedType == "TV Series") {
+
+            if (state.selectedType == ContentType.ALL || state.selectedType == ContentType.TV_SERIES) {
                 sections.add("Popular TV Series" to filteredTv)
             }
 
-            if (state.selectedType == "All" || state.selectedType == "Actors") {
+            if (state.selectedType == ContentType.ALL || state.selectedType == ContentType.ACTORS) {
                 sections.add("Trending People" to state.trendingPeople)
             }
 
@@ -212,29 +213,26 @@ fun HomeScreenContent(
 
 }
 
-fun filterByYear(items: List<Result>, selectedYear: String): List<Result> {
-    if (selectedYear == "All") return items
-
+fun filterByYear(items: List<Result>, selectedYear: YearFilter): List<Result> {
+    if (selectedYear == YearFilter.ALL) return items
 
     return items.filter { movie ->
-
         val year = movie.releaseDate?.take(4)?.toIntOrNull()
-
         when (selectedYear) {
-            "2020s" -> year != null && year >= 2020
-            "2010s" -> year != null && year in 2010..2019
-            "Classics" -> year != null && year < 2010
+            YearFilter.Y2020S -> year != null && year >= 2020
+            YearFilter.Y2010S -> year != null && year in 2010..2019
+            YearFilter.CLASSICS -> year != null && year < 2010
             else -> true
         }
     }
 }
 
 
-fun filterByRating(items: List<Result>, minRating: Double?): List<Result> {
-    if (minRating == null) return items
+fun filterByRating(items: List<Result>, ratingFilter: RatingFilter): List<Result> {
+    if (ratingFilter == RatingFilter.ALL) return items
 
     return items.filter { movie ->
-        movie.voteAverage != null && movie.voteAverage >= minRating
+        movie.voteAverage != null && movie.voteAverage >= (ratingFilter.minRating ?: 0.0)
     }
 }
 
