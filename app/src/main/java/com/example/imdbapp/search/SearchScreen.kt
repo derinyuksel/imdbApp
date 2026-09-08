@@ -2,6 +2,7 @@ package com.example.imdbapp.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.imdbapp.home.HomeViewModel
 import com.example.imdbapp.home.MovieCard
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 
 @Composable
 fun SearchScreen(
@@ -38,7 +45,8 @@ fun SearchScreen(
     var searchQuery by remember { mutableStateOf("") }
 
 
-    val allMovies = (state.trendingMovies + state.popularMovies + state.topRatedMovies + state.upcomingMovies).distinctBy { it.id }
+    val allMovies =
+        (state.trendingMovies + state.popularMovies + state.topRatedMovies + state.upcomingMovies).distinctBy { it.id }
 
 
     val filteredMovies = if (searchQuery.isBlank()) {
@@ -53,43 +61,63 @@ fun SearchScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(
-            text = "Search Movies",
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp
+            text = "Search",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 32.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
 
 
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Search by title...") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            placeholder = { Text("Search by title...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp),
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            singleLine = true,
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                focusedContainerColor = androidx.compose.ui.graphics.Color.LightGray.copy(alpha = 0.2f),
+                unfocusedContainerColor = androidx.compose.ui.graphics.Color.LightGray.copy(alpha = 0.2f)
+            )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
 
-        if (filteredMovies.isEmpty()) {
-            Text(text = "No movies found matching '$searchQuery'")
+        if (filteredMovies.isEmpty() && searchQuery.isNotEmpty()) {
+            Text(
+                text = "No results for '$searchQuery'",
+                modifier = Modifier.padding(start = 8.dp),
+                color = androidx.compose.ui.graphics.Color.Gray
+            )
         } else {
-            LazyColumn {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
                 items(filteredMovies) { movie ->
                     MovieCard(
                         movie = movie,
                         onMovieClick = onMovieClick,
-                        modifier = Modifier.width(500.dp)
-
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
     }
 }
+
+
+
