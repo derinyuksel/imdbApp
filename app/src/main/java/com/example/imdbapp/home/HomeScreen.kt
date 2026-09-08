@@ -15,13 +15,17 @@ import kotlin.collections.filter
 import com.example.imdbapp.model.Result
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -30,7 +34,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
@@ -38,19 +44,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
+import com.example.imdbapp.util.shimmer
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    scrollToTopTrigger: Int = 0,
     onMovieClick: (Int) -> Unit,
     onPersonClick: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(scrollToTopTrigger) {
+        if (scrollToTopTrigger > 0) {
+            listState.animateScrollToItem(0)
+        }
+    }
 
     HomeScreenContent(
         state = state,
+        listState = listState,
         modifier = modifier,
         onMovieClick = onMovieClick,
         onPersonClick = onPersonClick,
@@ -65,6 +81,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     state: HomeUiState,
+    listState: LazyListState = rememberLazyListState(),
     modifier: Modifier = Modifier,
     onMovieClick: (Int) -> Unit = {},
     onPersonClick: (Int) -> Unit = {},
@@ -83,7 +100,7 @@ fun HomeScreenContent(
         }
 
         else -> {
-            //Filter movies & TV series lists by selected genre ID
+            //Filtering based on Genre ID
             val filteredTrending = filterByRating(filterByYear(filterByGenre(state.trendingMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredPopular = filterByRating(filterByYear(filterByGenre(state.popularMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredTopRated = filterByRating(filterByYear(filterByGenre(state.topRatedMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
@@ -119,6 +136,8 @@ fun HomeScreenContent(
                         }
                     }
 
+                   item{ Spacer(modifier = Modifier.height(32.dp))}
+
                     // Filter buttons on top
                     item {
                         FilterSection(
@@ -134,7 +153,9 @@ fun HomeScreenContent(
                         )
                     }
 
-                    // Movies, series, people section
+
+                  item{  Spacer(modifier = Modifier.height(32.dp))}
+
                     items(sections) { (title, movies) ->
                         MoviesSection(
                             title = title,
@@ -194,15 +215,15 @@ fun FeaturedBanner(
     onMovieClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    //Opens Youtube URLs
+
     val uriHandler = LocalUriHandler.current
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(280.dp)
+            .height(400.dp)
             .clickable { onMovieClick(movie.id) },
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(28.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Featured image
@@ -242,10 +263,12 @@ fun FeaturedBanner(
                 // Watch trailer button
                 Button(
                     onClick = {
-                        //Rick Astley music video as placeholder for every movie
+                        //placeholder for every movie
                         uriHandler.openUri("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
