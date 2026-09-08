@@ -21,12 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.imdbapp.core.ThemeViewModel
 
 @Composable
 fun SettingsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ThemeViewModel = hiltViewModel()
 ) {
-    var darkModeEnabled by remember { mutableStateOf(true) }
+    val isDarkMode by viewModel.isDarkMode.collectAsStateWithLifecycle()
+
     var notificationsEnabled by remember { mutableStateOf(true) }
 
     Column(
@@ -55,8 +60,8 @@ fun SettingsScreen(
                     modifier = Modifier.weight(1f)
                 )
                 Switch(
-                    checked = darkModeEnabled,
-                    onCheckedChange = { darkModeEnabled = it }
+                    checked = isDarkMode,
+                    onCheckedChange = { viewModel.toggleDarkMode(it) }
                 )
             }
         }
