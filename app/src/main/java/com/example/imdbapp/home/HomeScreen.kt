@@ -129,12 +129,14 @@ fun HomeScreenContent(
         }
     }
 
+
+
+
         state.error != null -> {
             Text(text = state.error)
         }
 
         else -> {
-            //Filtering based on Genre ID
             val filteredTrending = filterByRating(filterByYear(filterByGenre(state.trendingMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredPopular = filterByRating(filterByYear(filterByGenre(state.popularMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredTopRated = filterByRating(filterByYear(filterByGenre(state.topRatedMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
@@ -163,15 +165,15 @@ fun HomeScreenContent(
                 LazyColumn {
                     if (state.trendingMovies.isNotEmpty()) {
                         item {
-                            FeaturedBanner(
-                                movie = state.trendingMovies.first(),
-                                onMovieClick = onMovieClick,
-                                modifier = Modifier.padding(16.dp)
+                            FeaturedPager(
+                                items = state.featuredItems,
+                                onItemClick = onMovieClick,
+                                modifier = Modifier.padding(vertical = 16.dp)
                             )
                         }
                     }
 
-                   item{ Spacer(modifier = Modifier.height(32.dp))}
+                   item{ Spacer(modifier = Modifier.height(12.dp))}
 
                     // Filter buttons on top
                     item {
@@ -189,7 +191,7 @@ fun HomeScreenContent(
                     }
 
 
-                  item{  Spacer(modifier = Modifier.height(32.dp))}
+                  item{  Spacer(modifier = Modifier.height(28.dp))}
 
                     items(sections) { (title, movies) ->
                         MoviesSection(

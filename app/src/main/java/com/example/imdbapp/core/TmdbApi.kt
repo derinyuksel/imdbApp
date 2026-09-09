@@ -15,6 +15,9 @@ interface TmdbApi {
     @GET("trending/movie/week")
     suspend fun getTrendingMovies(): MovieResponse
 
+    @GET("trending/all/day")
+    suspend fun getTrendingAll(): MovieResponse
+
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(): MovieResponse
 
