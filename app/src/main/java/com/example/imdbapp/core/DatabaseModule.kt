@@ -11,6 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import com.example.imdbapp.core.UserDao
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,5 +30,11 @@ object DatabaseModule {
     @Provides
     fun provideWatchlistDao(database: AppDatabase): WatchlistDao {
         return database.watchlistDao()
+    }
+
+
+    @Provides
+    fun provideUserDao(database: AppDatabase): UserDao {
+        return database.userDao()
     }
 }
