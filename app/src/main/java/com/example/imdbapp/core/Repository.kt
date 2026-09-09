@@ -59,4 +59,7 @@ class Repository @Inject constructor(
         watchlistDao.removeFromWatchlist(movie)
 
     fun isMovieInWatchlist(id: Int) = watchlistDao.isMovieInWatchlist(id)
+
+    suspend fun getTrendingAll() = getHomeData { apiService.getTrendingAll() }
 }
+

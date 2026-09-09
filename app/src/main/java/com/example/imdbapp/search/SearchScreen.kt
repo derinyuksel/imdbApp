@@ -110,6 +110,8 @@ fun SearchScreen(
                 items(filteredMovies) { movie ->
                     MovieCard(
                         movie = movie,
+                        isFavorite = state.watchlistIds.contains(movie.id),
+                        onToggleFavorite = {viewModel.toggleWatchlist(movie)},
                         onMovieClick = onMovieClick,
                         modifier = Modifier.fillMaxWidth()
                     )
