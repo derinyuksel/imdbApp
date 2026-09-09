@@ -7,4 +7,5 @@ data class MovieDetailUiState(
     val movie: Result? = null,
     val cast: List<Cast> = emptyList(),
     val error: String? = null,
+    val isInWatchlist: Boolean = false
 )
