@@ -142,6 +142,7 @@ fun HomeScreenContent(
             val filteredTopRated = filterByRating(filterByYear(filterByGenre(state.topRatedMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredUpcoming = filterByRating(filterByYear(filterByGenre(state.upcomingMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
             val filteredTv = filterByRating(filterByYear(filterByGenre(state.tvShows, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
+            val filteredClassics = filterByRating(filterByYear(filterByGenre(state.classicMovies, state.selectedGenreId), state.selectedYear), state.selectedMinRating)
 
             val sections = mutableListOf<Pair<String, List<Result>>>()
 
@@ -150,6 +151,7 @@ fun HomeScreenContent(
                 sections.add("Popular" to filteredPopular)
                 sections.add("Top Rated" to filteredTopRated)
                 sections.add("Upcoming" to filteredUpcoming)
+                sections.add("All-Time Hits" to filteredClassics)
             }
 
 

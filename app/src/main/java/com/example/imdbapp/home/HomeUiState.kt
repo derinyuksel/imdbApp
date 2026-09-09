@@ -18,5 +18,6 @@ data class HomeUiState(
     val tvShows: List<Result> =emptyList(),
     val trendingPeople: List<Result> = emptyList(),
     val error: String? = null,
-    val watchlistIds: Set<Int> = emptySet()
+    val watchlistIds: Set<Int> = emptySet(),
+    val classicMovies: List<Result> = emptyList(),
 )
