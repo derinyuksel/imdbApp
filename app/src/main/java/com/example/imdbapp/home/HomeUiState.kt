@@ -5,6 +5,7 @@ import com.example.imdbapp.model.Result
 
 data class HomeUiState(
     val isLoading: Boolean = false,
+    val featuredItems: List<Result> = emptyList(),
     val selectedType: ContentType = ContentType.ALL, //enum clas olsun. String yerine ContentType yaptım HomeFilters icinde
     val selectedGenreId: Int? = null,
     val selectedYear: YearFilter = YearFilter.ALL, //String yerine YearFilter oldu HomeFilters icinde
