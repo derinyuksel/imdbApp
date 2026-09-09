@@ -20,6 +20,8 @@ val LilacPrimary = Color(0xFFD1B3FF)
 val LilacSecondary = Color(0xFFE6D5FF)
 val LilacTertiary = Color(0xFFB380FF)
 
+val DarkPurpleHeart = Color(0xFF950ABF)
+
 val DeepBlack = Color(0xFF000000)
 val SurfaceDark = Color(0xFF121212)
 val LilacWhite = Color(0xFFF8F4FF)
