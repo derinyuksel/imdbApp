@@ -55,7 +55,7 @@ fun MovieCard(
             )
             IconButton(
                 onClick = onToggleFavorite,
-                modifier = Modifier.align(Alignment.TopEnd) // Put it in the top-right
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,

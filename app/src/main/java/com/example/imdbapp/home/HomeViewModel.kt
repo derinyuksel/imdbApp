@@ -82,6 +82,16 @@ class HomeViewModel @Inject constructor(
             val result = repo.getMovieGenres()
             _uiState.update { it.copy(genres = (result as? NetworkResult.Success)?.data?.genres.orEmpty()) }
         }
+
+
+        viewModelScope.launch {
+            val result = repo.getTrendingAll()
+            _uiState.update {
+                it.copy(
+                    featuredItems = (result as? NetworkResult.Success<List<Result>>)?.data?.take(5).orEmpty()
+                )
+            }
+        }
     }
 
     fun selectTypeFilter(type: ContentType) { //String yerine ContentType enum class ile guncellendi

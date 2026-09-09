@@ -111,7 +111,7 @@ fun MovieDetailContent(
                             ) {
                                 items(state.movie.genres) { genre ->
                                     AssistChip(
-                                        onClick = {}, //Can be clicked but is not functional
+                                        onClick = {},
                                         label = { Text(text = genre.name) }
                                     )
                                 }
