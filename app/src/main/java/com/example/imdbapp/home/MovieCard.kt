@@ -22,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.filled.FavoriteBorder
+import com.example.imdbapp.ui.theme.LilacPrimary
+import com.example.imdbapp.ui.theme.Purple40
 
 @Composable
 fun MovieCard(
@@ -60,7 +62,7 @@ fun MovieCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) Color.Red else Color.White
+                    tint = if (isFavorite)  MaterialTheme.colorScheme.tertiary else Color.White
                 )
             }
         }
