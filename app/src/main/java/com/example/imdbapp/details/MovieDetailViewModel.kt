@@ -54,6 +54,37 @@ class MovieDetailViewModel @Inject constructor(
 
     init {
         loadDetails()
+        viewModelScope.launch {
+            repo.isMovieInWatchlist(movieId.toInt()).collect { isFavorite ->
+                _uiState.update { it.copy(isInWatchlist = isFavorite) }
+            }
+        }
     }
 
+
+
+    fun toggleWatchlist() {
+        val movie = _uiState.value.movie ?: return
+        viewModelScope.launch {
+            if (_uiState.value.isInWatchlist) {
+                repo.removeFromWatchlist(
+                    com.example.imdbapp.model.WatchlistMovie(
+                        movie.id,
+                        movie.title ?: "",
+                        movie.posterPath,
+                        movie.voteAverage
+                    )
+                )
+            } else {
+                repo.addToWatchlist(
+                    com.example.imdbapp.model.WatchlistMovie(
+                        movie.id,
+                        movie.title ?: "",
+                        movie.posterPath,
+                        movie.voteAverage
+                    )
+                )
+            }
+        }
+    }
 }

@@ -1,10 +1,10 @@
 package com.example.imdbapp.details
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +31,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.AssistChip
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun MovieDetailScreen(
@@ -42,7 +45,8 @@ fun MovieDetailScreen(
     MovieDetailContent(
         state = state,
         onBackClick = onBackClick,
-        onActorClick = onActorClick
+        onActorClick = onActorClick,
+        onToggleWatchlist = {viewModel.toggleWatchlist()}
     )
 
 
@@ -54,7 +58,8 @@ fun MovieDetailContent(
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
     onActorClick: (Int) -> Unit,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onToggleWatchlist: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -89,12 +94,26 @@ fun MovieDetailContent(
                         contentScale = ContentScale.Crop
                     )
 
-                    //Text details
+
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = state.movie.title ?: "Unknown Title",
-                            style = MaterialTheme.typography.headlineMedium
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = state.movie.title ?: "Unknown Title",
+                                style = MaterialTheme.typography.headlineMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = onToggleWatchlist) {
+                                Icon(
+                                    imageVector = if (state.isInWatchlist) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = "Favorite",
+                                    tint = if (state.isInWatchlist) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
